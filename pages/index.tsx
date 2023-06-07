@@ -1,6 +1,7 @@
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Landing from "@/components/Landing";
 import JournalHome from "@/components/Home";
+import { useEffect } from "react";
 
 export default function Home() {
   async function signInWithGoogle() {

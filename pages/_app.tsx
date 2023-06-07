@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { AppProps } from "next/app";
+import { PasswordProvider } from "@/contexts/PasswordContext";
 
 function App({
   Component,
@@ -17,7 +18,9 @@ function App({
       supabaseClient={supabase}
       initialSession={pageProps.initialSession}
     >
-      <Component {...pageProps} />
+      <PasswordProvider>
+        <Component {...pageProps} />
+      </PasswordProvider>
     </SessionContextProvider>
   );
 }

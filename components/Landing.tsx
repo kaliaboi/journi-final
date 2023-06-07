@@ -5,6 +5,7 @@ import MainAnimation from "../components/MainAnimation";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import google from "../public/google.png";
 import Image from "next/image";
+import { Info, Plane } from "lucide-react";
 
 export default function Landing({ google, discord }: any) {
   return (
