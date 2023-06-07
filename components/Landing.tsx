@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function Landing({ google, discord }: any) {
   return (
-    <main className="flex w-full justify-center h-screen">
+    <div className="flex h-full w-full justify-center">
       <div className="px-6 py-12 flex flex-col justify-between lg:justify-center max-w-md">
         <div className="top">
           <MainAnimation />
@@ -56,6 +56,6 @@ export default function Landing({ google, discord }: any) {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
