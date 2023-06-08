@@ -38,6 +38,7 @@ export function PasswordProvider({ children }) {
       if (data[0].setup_completed) {
         const lastSecured = data[0].last_secured;
         if (Date.now() - lastSecured > 180000) {
+          console.log(Date.now() - lastSecured);
           setPasswordNeeded(true);
         }
       }
