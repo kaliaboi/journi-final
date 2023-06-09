@@ -39,8 +39,8 @@ const EntryList: FC<EntryListProps> = ({ entries }) => {
   return (
     <div className="p-8">
       <motion.div variants={container} initial="hidden" animate="show">
-        {entries.map((e: any) => (
-          <motion.div variants={item}>
+        {entries.map((e: any, key: any) => (
+          <motion.div variants={item} key={key}>
             <Card className="mb-2">
               <CardHeader>
                 <CardTitle>{e.created_at}</CardTitle>
