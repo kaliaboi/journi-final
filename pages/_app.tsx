@@ -4,6 +4,7 @@ import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { AppProps } from "next/app";
 import { PasswordProvider } from "@/contexts/PasswordContext";
+import { Toaster } from "react-hot-toast";
 
 function App({
   Component,
@@ -20,6 +21,7 @@ function App({
     >
       <PasswordProvider>
         <Component {...pageProps} />
+        <Toaster />
       </PasswordProvider>
     </SessionContextProvider>
   );

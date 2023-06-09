@@ -1,7 +1,7 @@
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import Landing from "@/components/Landing";
 import JournalHome from "@/components/Home";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   async function signInWithGoogle() {
@@ -23,12 +23,21 @@ export default function Home() {
   }
   const session = useSession();
   const supabase = useSupabaseClient();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 1000);
+  });
   return (
     <>
-      {!session ? (
-        <Landing google={signInWithGoogle} discord={signInWithDiscord} />
-      ) : (
+      {session ? (
         <JournalHome />
+      ) : (
+        <Landing
+          google={signInWithGoogle}
+          discord={signInWithDiscord}
+          loading={loading}
+        />
       )}
     </>
   );

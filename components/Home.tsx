@@ -2,39 +2,55 @@
 
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { FC, useEffect, useState } from "react";
+import Setup from "./Setup";
+import { Button } from "./ui/button";
+import { Badge } from "@/components/ui/badge";
+import Empty from "./Empty";
+import EntryList from "./EntryList";
+import { toast } from "react-hot-toast";
+import NewJournalPopOver from "./NewJournalPopOver";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
-import axios from "axios";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { BarLoader } from "react-spinners";
+
+//TODO: add entry type
 
 const Home: FC = ({}) => {
   const [setupNeeded, setSetupNeeded] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [entries, setEntries] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [avatar, setAvatar] = useState();
   const supabase = useSupabaseClient();
   const session = useSession();
 
-  const storePassword = async (hash: string) => {
-    const response = await supabase
-      .from("setups")
-      .update({
-        password_hash: hash,
-        setup_completed: true,
-        last_secured: Date.now(),
-      })
-      .eq("user_id", session?.user.id);
-
-    setSetupNeeded(false);
+  const getEntries = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("entries").select();
+    if (error) {
+      toast.error(error.message);
+    } else {
+      setEntries(data.reverse());
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
+    setAvatar(session?.user.user_metadata.avatar_url);
     const checkIfNeedsSetup = async () => {
       const { data, error } = await supabase
         .from("setups")
@@ -57,60 +73,67 @@ const Home: FC = ({}) => {
       }
     };
     checkIfNeedsSetup();
+    getEntries();
   }, []);
 
   return (
-    <div className="flex flex-col items-center h-full w-full bg-slate-200">
-      <div className="w-full max-w-2xl bg-slate-50">
-        <p>Account page will go here.</p>
-        <p>{setupNeeded && "Setup Needed"}</p>
-        <button onClick={() => supabase.auth.signOut()}>Sign Out</button>
-        <AlertDialog open={setupNeeded}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <div className="w-full flex justify-center sm:justify-start">
-                <div className="w-36">
-                  <img src="/tea.svg" alt="" />
-                </div>
-              </div>
-
-              <AlertDialogTitle>
-                Welcome to Journi,{" "}
-                {session?.user.user_metadata.name.split(" ")[0]}!
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Before we get started, you will need to add a password to your
-                journal so that your entreis are secure and encrypted
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <div className="my-8 flex flex-col gap-2">
-              <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                type="password"
-              />
-              <Input
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your password"
-                type="password"
-              />
+    <div className="flex flex-col items-center h-full w-full overflow-hidden">
+      <div className="w-full max-w-3xl bg-white h-full overflow-scroll">
+        <div className="flex flex-col h-full">
+          <div className="nav w-full h-10 flex items-center justify-between p-8 sticky top-0 bg-white shadow-sm">
+            <div className="logo flex gap-2 items-center">
+              <p>Journi</p>
+              <Badge variant="secondary">Beta</Badge>
             </div>
-            <AlertDialogFooter>
-              <AlertDialogAction
-                disabled={password.length < 6 || password !== confirmPassword}
-                onClick={() =>
-                  axios
-                    .post("/api/hashPassword", { password })
-                    .then((res) => storePassword(res.data.hash))
-                }
-              >
-                Continue
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+            <div className="flex gap-2 items-center">
+              <NewJournalPopOver />
+              {avatar ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Avatar className="w-8 h-8 cursor-pointer">
+                      <AvatarImage src={avatar} />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </PopoverTrigger>
+                  <PopoverContent className="flex flex-col gap-2">
+                    <Button
+                      className="shadow-none"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => supabase.auth.signOut()}
+                    >
+                      Sign Out
+                    </Button>
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <Skeleton className="w-8 h-8 rounded-full" />
+              )}
+            </div>
+          </div>
+
+          {entries ? (
+            entries.length === 0 ? (
+              <div className="empty flex justify-center items-center  grow">
+                <Empty />
+              </div>
+            ) : (
+              <EntryList entries={entries} />
+            )
+          ) : (
+            <div className="w-full h-full flex justify-center items-center">
+              <BarLoader />
+            </div>
+          )}
+        </div>
+        <Setup
+          open={setupNeeded}
+          password={password}
+          setPassword={setPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          setSetupNeeded={setSetupNeeded}
+        />
       </div>
     </div>
   );

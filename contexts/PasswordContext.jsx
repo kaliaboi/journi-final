@@ -1,5 +1,4 @@
-import { supabase } from "@/lib/supabase";
-import { useSession } from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import {
   ReactNode,
   createContext,
@@ -27,25 +26,29 @@ export function PasswordProvider({ children }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const session = useSession();
+  const supabase = useSupabaseClient();
 
   const checkIfPasswordNeeded = async () => {
     const { data } = await supabase
       .from("setups")
       .select("setup_completed, last_secured")
-      .eq("user_id", session.user.id);
+      .eq("user_id", session.user?.id);
 
-    if (data.length > 0) {
-      if (data[0].setup_completed) {
-        const lastSecured = data[0].last_secured;
-        if (Date.now() - lastSecured > 180000) {
-          console.log(Date.now() - lastSecured);
-          setPasswordNeeded(true);
+    if (data) {
+      if (data.length > 0) {
+        if (data[0].setup_completed) {
+          const lastSecured = data[0].last_secured;
+          if (Date.now() - lastSecured > 1800000) {
+            console.log(Date.now() - lastSecured);
+            setPasswordNeeded(true);
+          }
         }
       }
     }
   };
 
   useEffect(() => {
+    console.log(session);
     if (session) {
       checkIfPasswordNeeded();
     }
@@ -59,7 +62,6 @@ export function PasswordProvider({ children }) {
       .eq("user_id", session?.user.id);
 
     if (data) {
-      console.log(data[0].password_hash);
       const hash = data[0].password_hash;
       axios
         .post("/api/checkPassword", { password: pass, hash })
