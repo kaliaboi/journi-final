@@ -94,9 +94,9 @@ const Guided: FC<GuidedProps> = ({ createdAt }) => {
         <Progress
           value={(messages.filter((m) => m.role === "user").length / 3) * 100}
           className="h-2 mb-8"
-          completed={
-            (messages.filter((m) => m.role === "user").length / 3) * 100 >= 100
-          }
+          // completed={
+          //   (messages.filter((m) => m.role === "user").length / 3) * 100 >= 100
+          // }
         />
         <div className="">
           <p className="mb-4">
