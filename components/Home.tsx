@@ -84,7 +84,7 @@ const Home: FC = ({}) => {
           <div className="nav w-full h-10 flex items-center justify-between p-8 sticky top-0 bg-white shadow-sm">
             <div className="logo flex gap-2 items-center">
               <p>
-                📕 {session?.user.user_metadata.full_name.split(" ")[0]}'s
+                📕 {session?.user.user_metadata.full_name.split(" ")[0]}&apos;s
                 Journal
               </p>
             </div>
