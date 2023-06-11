@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import Title from "./ui/Title";
 import axios from "axios";
 import { RefreshCcw } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
+import { Separator } from "@radix-ui/react-separator";
 
 interface PromptProps {
   createdAt: string;
@@ -61,10 +63,25 @@ const Prompt: FC<PromptProps> = ({ createdAt }) => {
   return (
     <>
       <div className="h-full">
-        <div className="">
-          <p className="mb-4">{loading ? "Fetching prompt..." : prompt}</p>
-          <Button onClick={refreshPrompt}>
-            <RefreshCcw />
+        <div className="flex flex-col gap-4 mb-10">
+          <p className="">
+            {loading ? (
+              <div className="flex flex-col gap-3">
+                <Skeleton className="w-full h-[20px] rounded-full" />
+                <Skeleton className="w-[300px] h-[20px] rounded-full" />
+              </div>
+            ) : (
+              prompt
+            )}
+          </p>
+          <Button
+            onClick={refreshPrompt}
+            size="sm"
+            variant="outline"
+            className="w-full"
+          >
+            <RefreshCcw className="w-[16px] mr-4" />
+            Refresh Prompt
           </Button>
         </div>
 

@@ -11,6 +11,7 @@ import axios from "axios";
 import { RefreshCcw } from "lucide-react";
 import { ChatGPTMessage } from "@/lib/opanai";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "./ui/skeleton";
 
 interface GuidedProps {
   createdAt: string;
@@ -91,16 +92,23 @@ const Guided: FC<GuidedProps> = ({ createdAt }) => {
   return (
     <>
       <div className="h-full">
-        <Progress
+        {/* <Progress
           value={(messages.filter((m) => m.role === "user").length / 3) * 100}
           className="h-2 mb-8"
           // completed={
           //   (messages.filter((m) => m.role === "user").length / 3) * 100 >= 100
           // }
-        />
+        /> */}
         <div className="">
           <p className="mb-4">
-            {loading ? "Fetching prompt..." : lastAssistantMessage}
+            {loading ? (
+              <div className="flex flex-col gap-3">
+                <Skeleton className="w-full h-[20px] rounded-full" />
+                <Skeleton className="w-[300px] h-[20px] rounded-full" />
+              </div>
+            ) : (
+              lastAssistantMessage
+            )}
           </p>
         </div>
 

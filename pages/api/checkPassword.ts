@@ -14,7 +14,6 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { password, hash } = req.body;
-    console.log({ password, hash });
     const check = await comparePassword(password, hash);
     res.status(200).json({ result: check });
   } else {

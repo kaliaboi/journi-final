@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import EntryCard from "./EntryCard";
 
 interface EntryListProps {
   entries: any;
@@ -41,7 +42,7 @@ const EntryList: FC<EntryListProps> = ({ entries }) => {
       <motion.div variants={container} initial="hidden" animate="show">
         {entries.map((e: any, key: any) => (
           <motion.div variants={item} key={key}>
-            <Card className="mb-2">
+            {/* <Card className="mb-2">
               <CardHeader>
                 <CardTitle>{e.created_at}</CardTitle>
                 <CardDescription>{e.entry_type}</CardDescription>
@@ -49,7 +50,8 @@ const EntryList: FC<EntryListProps> = ({ entries }) => {
               <CardContent>
                 <p>{e.entry_body}</p>
               </CardContent>
-            </Card>
+            </Card> */}
+            <EntryCard entry={e} />
           </motion.div>
         ))}
       </motion.div>

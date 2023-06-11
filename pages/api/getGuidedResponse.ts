@@ -14,7 +14,6 @@ export default async function handler(
 
   if (req.method === "POST") {
     const messages: ChatGPTMessage[] = [initialPrompt, ...req.body.messages];
-    console.log(messages);
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: messages,

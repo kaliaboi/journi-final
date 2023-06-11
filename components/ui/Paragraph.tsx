@@ -2,7 +2,7 @@ import { cn } from "../../lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
 import { HTMLAttributes, ReactNode, forwardRef } from "react";
 
-const paragraph = cva(["font-[400] leading-snug"], {
+const paragraph = cva(["leading-7"], {
   variants: {
     prominence: {
       dark: "text-[#393e47]",

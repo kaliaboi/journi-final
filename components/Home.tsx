@@ -25,6 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BarLoader } from "react-spinners";
+import Paragraph from "./ui/Paragraph";
 
 //TODO: add entry type
 
@@ -78,12 +79,14 @@ const Home: FC = ({}) => {
 
   return (
     <div className="flex flex-col items-center h-full w-full overflow-hidden">
-      <div className="w-full max-w-3xl bg-white h-full overflow-scroll">
-        <div className="flex flex-col h-full">
+      <div className="w-full max-w-3xl h-full overflow-scroll">
+        <div className="flex flex-col min-h-screen">
           <div className="nav w-full h-10 flex items-center justify-between p-8 sticky top-0 bg-white shadow-sm">
             <div className="logo flex gap-2 items-center">
-              <p>Journi</p>
-              <Badge variant="secondary">Beta</Badge>
+              <p>
+                📕 {session?.user.user_metadata.full_name.split(" ")[0]}'s
+                Journal
+              </p>
             </div>
             <div className="flex gap-2 items-center">
               <NewJournalPopOver />
@@ -135,6 +138,15 @@ const Home: FC = ({}) => {
           setSetupNeeded={setSetupNeeded}
         />
       </div>
+      <p className="p-4 w-full text-center bg-white">
+        Created with ☕️ and ♥️ by{" "}
+        <a
+          className="underline underline-offset-4"
+          href="https://abhishekkalia.design"
+        >
+          Abhishek Kalia
+        </a>
+      </p>
     </div>
   );
 };

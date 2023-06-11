@@ -26,7 +26,6 @@ export default async function handler(
       model: "gpt-3.5-turbo",
       messages: messages,
     });
-    console.log(response.data.choices[0].message?.content);
     res.status(200).json({
       response: response.data.choices[0].message?.content.split("=")[1],
     });
